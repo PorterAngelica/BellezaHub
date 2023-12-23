@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "react-router-dom": "^6.21.1"
+  },
+  "devDependencies": {
+    "eslint-plugin-react-hooks": "^4.6.0"
   }
 }

@@ -7,15 +7,19 @@ import RightBar from './components/rightBar/RightBar'
 import Home from './pages/home/Home'
 import Profile from './pages/profile/Profile'
 
+
 function App() {
-  
+
   const Layout = () =>{
     return (
       <div>
-        <NavBar/>
+        
+        <NavBar />
         <div style={{display:'flex'}}> 
         <LeftBar/>
+        <div style={{flex:6}}>
         <Outlet />
+        </div>
         <RightBar />
         </div>
       </div>
@@ -31,10 +35,10 @@ function App() {
     <Routes>
 
       <Route path='/register'  element={<Register/>}/>
-      <Route path='/login' exact element={<Login/>}/>
+      <Route path='/login'  element={<Login/>}/>
 
-      <Route path='/'  element={<Layout/> }> 
-          <Route path='/' element={<Home/>} />
+      <Route path='/home'  element={<Layout/> }> 
+          <Route path='/home' element={<Home/>} />
           <Route path='/home/profile/:id' element={< Profile/>} />
       </Route>
 
