@@ -1,22 +1,16 @@
 import { useContext } from 'react'
 import '../navbar/navbar.scss'
 import { Link } from 'react-router-dom';
-import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
-import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
-import HomeOutlined from '@mui/icons-material/HomeOutlined';
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
-import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {  faBell, faUser } from '@fortawesome/free-regular-svg-icons'
+import {  faBell, faUser, faLightbulb } from '@fortawesome/free-regular-svg-icons'
 import { faGrip, faHouse, faInbox, faMoon, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { DarkModeContext } from '../../context/darkModeContext';
 
 
 
 const NavBar = () => {
+
+    const {toggle, darkMode} = useContext(DarkModeContext)
     return (
         <div className="navBar">
             <div className="left">
@@ -24,7 +18,12 @@ const NavBar = () => {
                     <span> Lama Social</span>
                 </Link>
                 <FontAwesomeIcon icon={faHouse} />
-                <FontAwesomeIcon icon={faMoon} />
+                {/* if dark mode is on, show light icon */}
+                { darkMode ? (
+                <FontAwesomeIcon icon={faLightbulb} onClick={toggle} /> 
+                ): ( //if light mode is on, show the moon icon
+                <FontAwesomeIcon icon={faMoon} onClick={toggle} />
+                )}
                 <FontAwesomeIcon icon={faGrip} />
                 <div className="search">
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
