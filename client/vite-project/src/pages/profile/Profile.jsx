@@ -1,10 +1,11 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import {  faInstagram } from '@fortawesome/free-regular-svg-icons'
-import {  faEnvelope } from '@fortawesome/free-regular-svg-icons'
+import { faEnvelope } from '@fortawesome/free-regular-svg-icons'
 // import { faTwitter, faPinterest } from '@fortawesome/free-solid-svg-icons'
 import { faLocationDot, faGlobe, faEllipsis } from '@fortawesome/free-solid-svg-icons'
 import "../profile/profile.scss"
+import Posts from '../../components/posts/Posts'
 
 const Profile = () => {
     return (
@@ -15,27 +16,33 @@ const Profile = () => {
             </div>
             <div className="profileContainer">
                 <div className="uInfo">
-
+                    <div className="left">
+                        <FontAwesomeIcon icon={faLocationDot} />
+                        <FontAwesomeIcon icon={faGlobe} />
+                        <FontAwesomeIcon icon={faEnvelope} />
+                        <FontAwesomeIcon icon={faEllipsis} />
+                    </div>
                     <div className="center">
                         <span>Rosarito</span>
                         <div className="info">
-                        <div className="item">
-                        <FontAwesomeIcon icon={faLocationDot} />
-                        <span>Mexico</span>
-                        </div>
-                        <div className="item">
-                        <FontAwesomeIcon icon={faGlobe} />
-                        <span>Spanish</span>
+                            <div className="item">
+                                <FontAwesomeIcon icon={faLocationDot} />
+                                <span>Mexico</span>
+                            </div>
+                            <div className="item">
+                                <FontAwesomeIcon icon={faGlobe} />
+                                <span>Spanish</span>
+                            </div>
                         </div>
                         <button>Follow</button>
                     </div>
                     <div className="right">
-                    <FontAwesomeIcon icon={faEnvelope} />
-                    <FontAwesomeIcon icon={faEllipsis} />
+                        <FontAwesomeIcon icon={faEnvelope} />
+                        <FontAwesomeIcon icon={faEllipsis} />
                     </div>
                 </div>
+                <Posts />
             </div>
-        </div>
         </div>
     )
 }
