@@ -5,9 +5,9 @@ import jwt from "jsonwebtoken"
 export const register = (req, res) => {
 
     //CHECK IF USER EXISTS
-    const q = "SELECT * FROM users WHERE username = ?"
+    const q = "SELECT * FROM users WHERE email = ?"
 
-    db.query(q, [req.body.username], (err,data) => {
+    db.query(q, [req.body.email], (err,data) => {
         if(err) return res.status(500).json(err)
         if(data.length) return res.status(409).json("User already exists");
     
@@ -36,9 +36,9 @@ export const register = (req, res) => {
 
 
 export const login = (req, res) => {
-    const q = "SELECT * FROM users WHERE username = ?"
+    const q = "SELECT * FROM users WHERE email = ?"
 
-    db.query(q, [req.body.username], (err,data) => {
+    db.query(q, [req.body.email], (err,data) => {
 
         if (err) return res.status(500).json(err);
 
