@@ -23,26 +23,26 @@ const Comments = ({postId}) => {
     });
 
 
-    const handleClick = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        mutation.mutate({ cdescription, postId });
+
+        const newComment = {
+            cdescription,
+            postId,
+            userId: currentUser.id
+        };
+        mutation.mutate(newComment);
         // setCdesc("");
     };
 
     const { isLoading, error, data } = useQuery({
         queryKey: ["comments"],
-        queryFn: () => makeRequest.get("/comments").then((res) => {
-            console.log(res.data); // Logging data inside the arrow function
-            return res.data;
+        queryFn: () => makeRequest.get("/comments").then((response) => {
+            console.log(response); // Logging data inside the arrow function
+            return response.data;
+        })
     })
-})
 
-    console.log("postId")
-    console.log(postId)
-    console.log("postId")
-
-    console.log("data")
-    console.log(data)
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -59,7 +59,7 @@ const Comments = ({postId}) => {
             <div className="write">
                 <img src="https://images.pexels.com/photos/15378249/pexels-photo-15378249/free-photo-of-photo-of-a-girl-in-a-car-window.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
                 <input type="text" placeholder='write comment'  onClick={(e) => setCdescription(e.target.value)} />
-                <button onClick={handleClick} >Send</button>
+                <button onClick={handleSubmit} >Send</button>
             </div>
                 {data.map((comment) => (
                         <div className="comment">
