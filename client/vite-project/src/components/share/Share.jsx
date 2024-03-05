@@ -7,44 +7,34 @@ import { AuthContext } from "../../context/AuthContext";
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { makeRequest } from "../../axios.js"
 import axios from "axios";
+import { Navigate } from "react-router-dom";
 
 const Share = () => {
 
     const [post, setPost] = useState({})
-    const [image, setImage] = useState(null)
+    const [file, setFile] = useState(null)
     const [description, setDescription] = useState("")
     const [users_id, setUsers_id] = useState("")
 
     const { currentUser } = useContext(AuthContext)
 
-    // const queryClient = useQueryClient()
+    const upload = async () => {
+        try{
+            const formData = new FormData();
+            formData.append("file", file);
+            const res = await makeRequest.post("/upload", formData);
+            return res.data
+        }catch(err){
+            console.log(err)
+        }
+    }
 
-    // const mutation = useMutation({
-    //     mutationFn: () =>  makeRequest.post("/posts", newPost),
-    //     onSuccess: () => {
-    //         queryClient.invalidateQueries(["posts"]);
-    //     },
-    //     onError: (error) => {
-    //       // Error actions
-    //         { error.message }
-    //     },
-    // });
-    
-
-    // const mutation = useMutation(
-    //     (newPost) => makeRequest.post("/posts", newPost),
-    //     {
-    //         onSuccess: () => {
-    //             queryClient.invalidateQueries("[posts]");
-    //         },
-    //     }
-    // );
-
-    const handleClick = e => {
+    const handleClick = async (e) => {
         e.preventDefault();
-        // mutation.mutate({ description })
+        let imgUrl = ""
+        if (file) imgUrl = await upload();
         axios.post("http://localhost:8800/api/posts/post", {
-            image,
+            image:imgUrl,
             description,
             users_id
 
@@ -53,6 +43,7 @@ const Share = () => {
             console.log(res.data);
 
             setPost([...post, res.data]);
+
         })
         .catch(err => console.log(err))
 }
@@ -63,17 +54,22 @@ const Share = () => {
         <div className="share">
             <div className="container">
                 <div className="top">
+                    <div className="left">
                     <img
                         src={currentUser.profilePic}
                         alt=""
                     />
 
                     <input type="text" placeholder={`What's on your mind ${currentUser.name}?`} onChange={(e) => setDescription(e.target.value)} />
+                    </div>
+                    <div className="right">
+                        {file && <img className="file" src={URL.createObjectURL(file)} />}
+                    </div>
                 </div>
                 <hr />
                 <div className="bottom">
                     <div className="left">
-                        <input type="file" id="file" style={{ display: "none" }} onChange={(e) => setImage(e.target.files[0])} />
+                        <input type="file" id="file" style={{ display: "none" }} onChange={(e) => setFile(e.target.files[0])} />
                         <label htmlFor="file">
                             <label htmlFor="">id</label>
                             <input type="text"  onChange={(e)=> setUsers_id(e.target.value)}/>

@@ -9,26 +9,29 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 
 
-const Posts = () => {
+const Posts = (props) => {
 
     const [post, setPost] = useState([])
 
     useEffect(() => {
-        axios.get("http://localhost:8800/api/posts/post")
-        .then(res => {
-                console.log(res.data.post)
-                setPost(res.data.post)
-    })
-
-    .catch(err => console.log(err));
-
+        fetch("http://localhost:8800/api/posts/post")
+        .then(response => response.json())
+        .then(response => { 
+            console.log("response")
+            console.log(response)
+            setPost(response)
+            setDescription(null)
+        })
+        
+        .catch(err => console.log(err));
+        
     }, [])
-
+    
+    // console.log(post)
     return (
         <div className='posts'>
-            {/* <Post /> */}
-            {/* {post.map((post) => <Post post={post} key={post.id} />)} */}
-            <Post />
+            
+            {post && post.map((postItem) => <Post postItem={postItem} key={post.id} />)}
         </div>
         
 
