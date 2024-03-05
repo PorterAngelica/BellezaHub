@@ -7,9 +7,10 @@ import Comments from '../comments/comments'
 import { useState } from 'react'
 
 
-function Post({post}) {
+function Post() {
 
     const [commentOpen, setCommentOpen] = useState(false)
+    const [post, setPost] = useState([])
 
     //TEMPORARY
     const liked = false;
@@ -29,8 +30,8 @@ function Post({post}) {
         <FontAwesomeIcon icon={faEllipsis} />
         </div>
         <div className="content">
-            <p>{post.desc}</p>
-            <img src={post.img} alt="" />
+            <p>{post.description}</p>
+            {/* <img src={post.img} alt="" /> */}
         </div>
         <div className="info">
             <div className="item">
