@@ -14,7 +14,7 @@ const Posts = (props) => {
     const [post, setPost] = useState([])
 
     useEffect(() => {
-        fetch("http://localhost:8800/api/posts/post")
+        fetch("http://localhost:8800/api/posts")
         .then(response => response.json())
         .then(response => { 
             console.log("response")

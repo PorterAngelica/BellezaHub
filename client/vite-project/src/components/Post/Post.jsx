@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {  faShare, faEllipsis, faHeartCircleBolt} from '@fortawesome/free-solid-svg-icons'
 import {  faHeart, faComment } from '@fortawesome/free-regular-svg-icons'
 import { Link } from 'react-router-dom'
-import Comments  from "../comments/comments.jsx"
+import Comments  from "../comments/comments"
 import { useState } from 'react'
 import moment from "moment/moment.js";
 
