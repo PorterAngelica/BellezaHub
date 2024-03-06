@@ -9,7 +9,7 @@ export const getPosts = (req, res) => {
     // jwt.verify(token, "secretKey", (err, userInfo) => {
     //     if(err) return res.status(403).json("Token is not valid")
         
-    const q = "SELECT * FROM posts"
+    const q = "SELECT * FROM posts ORDER BY posts.created_At DESC;"
     db.query(q, (err,data) =>{
         if (err) return res.status(500).json(err);
         return res.status(200).json(data)
