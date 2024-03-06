@@ -1,28 +1,39 @@
 import '../posts/Posts.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {  faShare, faEllipsis} from '@fortawesome/free-solid-svg-icons'
-import {  faHeart, faComment } from '@fortawesome/free-regular-svg-icons'
+import { faShare, faEllipsis } from '@fortawesome/free-solid-svg-icons'
+import { faHeart, faComment } from '@fortawesome/free-regular-svg-icons'
 import Post from '../Post/Post'
-import {  useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { makeRequest } from '../../axios'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 
-const  Posts = () => {
-//TEMPORARY DATA
-const { isLoading, error, data } = useQuery(["posts"], () =>
-makeRequest.get("/posts").then((res)=>{
-    return res.data
-})
-);
+const Posts = (props) => {
 
+    const [post, setPost] = useState([])
 
-
+    useEffect(() => {
+        fetch("http://localhost:8800/api/posts")
+        .then(response => response.json())
+        .then(response => { 
+            console.log("response")
+            console.log(response)
+            setPost(response)
+            setDescription(null)
+        })
+        
+        .catch(err => console.log(err));
+        
+    }, [])
+    
+    // console.log(post)
     return (
         <div className='posts'>
-            {/* {data.map(post=>(
-                <Post  post={post} key={post.id}/>
-            ))} */}
+            
+            {post && post.map((postItem) => <Post postItem={postItem} key={post.id} />)}
         </div>
+        
 
     )
 }
