@@ -2,7 +2,21 @@ import { db } from "../connect.js"
 import moment from "moment/moment.js";
 
 export const getComments = (req, res) => {
-const q = "SELECT * FROM comments WHERE posts_id = (?)"
+const q = 
+`SELECT 
+comments.*, 
+users.id AS users_id, 
+users.name, 
+users.profilePic
+FROM 
+social.comments
+JOIN 
+social.users ON users.id = comments.users_id
+WHERE 
+comments.posts_id = 25
+ORDER BY 
+comments.created_At DESC;
+`
     db.query(q,[req.query.posts_id], (err,data) =>{
         if (err) return res.status(500).json(err);
         return res.status(200).json(data)
