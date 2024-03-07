@@ -4,23 +4,71 @@ import {  faShare, faEllipsis, faHeartCircleBolt} from '@fortawesome/free-solid-
 import {  faHeart, faComment } from '@fortawesome/free-regular-svg-icons'
 import { Link } from 'react-router-dom'
 import Comments  from "../comments/comments"
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import moment from "moment/moment.js";
+import { makeRequest } from '../../axios'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { AuthContext } from '../../context/AuthContext'
 
 
 function Post({ postItem}) {
 
     const [openPostId, setOpenPostId] = useState(null)
+    const {currentUser} = useContext(AuthContext)
 
-    // const handleOpenCommentSection = (postId) => {
-    //     setOpenPostId(postId === openPostId? null : postId)
-    // };
     const handleOpenCommentSection = (postId) => {
         setOpenPostId((prevPostId) => (postId === prevPostId ? null : postId));
     };
 
-    //TEMPORARY
-    const liked = false;
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: (liked) => {
+            const requestData = {
+                UserId: currentUser.id,
+                postId: postItem.id
+            };
+            if(liked){
+                return makeRequest.delete("/likes", {data: requestData});
+            }else{
+                return makeRequest.post("/likes", requestData);
+            }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(["likes"]);
+        },
+        onError: (error) => {
+            {error.message}
+            console.log(error)
+        }
+    })
+
+    const handleLike = () => {
+        const isLiked = data && data.includes(currentUser.id);
+        mutation.mutate(!isLiked); // Toggle like state
+    }
+    console.log("currentUser.id")
+    console.log(currentUser.id)
+
+    const { isLoading, error, data } = useQuery({
+        queryKey: ["likes", postItem.id],
+        queryFn: () => makeRequest.get(`/likes?postId=${postItem.id}`).then((response) => {
+            return response.data
+        })
+    })
+    console.log("likes data")
+    console.log(data)
+
+    if (isLoading){
+        return <div> Loading ...</div>;
+    }
+
+    if(error){
+        console.log(error)
+        return <div> Error; {error.message} </div>;
+    }
+
+
     return (
         <div className='post'> 
         <div className="container">
@@ -43,15 +91,19 @@ function Post({ postItem}) {
         </div>
         <div className="info">
             <div className="item">
-                {liked ? <FontAwesomeIcon icon={faHeartCircleBolt} /> : <FontAwesomeIcon icon={faHeart} />}
-                12 liked
+
+                {data && data.includes(currentUser.id) ? (
+                <FontAwesomeIcon icon={faHeartCircleBolt} style={{color:"red"}} onClick={handleLike} /> 
+                ):( <FontAwesomeIcon icon={faHeart} onClick={handleLike} />
+                )}
+                {data.length} liked
             </div>
             
             <div className="item" onClick={() => handleOpenCommentSection(postItem.id)}>
             <FontAwesomeIcon icon={faComment} />
                 12 comments
-            </div>
-            <div className="item">
+            </div> 
+            <div className="item"> 
             <FontAwesomeIcon icon={faShare} />
                 share
             </div>
