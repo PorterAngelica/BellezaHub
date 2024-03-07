@@ -8,12 +8,14 @@ import { makeRequest } from '../../axios';
 const Comments = ({postId}) => {
 
     const [cdescription, setCdescription] = useState("")
+    const [comments, setComments] = useState([]);
     const { currentUser } = useContext(AuthContext)
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
         mutationFn: (newComment) => makeRequest.post("/comments", newComment),
-        onSuccess: () => {
+        onSuccess: (data) => {
+            setComments(prevComments => [...prevComments, data]);
             queryClient.invalidateQueries(["comments"]);
         },
         onError: (error) => {
@@ -36,13 +38,8 @@ const Comments = ({postId}) => {
     };
 
     const { isLoading, error, data } = useQuery({
-        queryKey: ["comments"],
-        queryFn: () => makeRequest.get(`/comments?posts_id=${postId}`).then((response) => {
-            console.log("coments res"); // Logging data inside the arrow function
-            console.log(postId)
-            console.log(response.data); // Logging data inside the arrow function
-            return response.data;
-        })
+        queryKey: ["comments", postId.toString()],
+        queryFn: () => makeRequest.get(`/comments?posts_id=${postId}`).then(response => response.data)
     })
 
 
