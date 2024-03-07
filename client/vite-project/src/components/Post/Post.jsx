@@ -8,10 +8,16 @@ import { useState } from 'react'
 import moment from "moment/moment.js";
 
 
-function Post({ postItem, post }) {
+function Post({ postItem}) {
 
-    const [commentOpen, setCommentOpen] = useState(false)
-    // const [post, setPost] = useState([])
+    const [openPostId, setOpenPostId] = useState(null)
+
+    // const handleOpenCommentSection = (postId) => {
+    //     setOpenPostId(postId === openPostId? null : postId)
+    // };
+    const handleOpenCommentSection = (postId) => {
+        setOpenPostId((prevPostId) => (postId === prevPostId ? null : postId));
+    };
 
     //TEMPORARY
     const liked = false;
@@ -40,7 +46,8 @@ function Post({ postItem, post }) {
                 {liked ? <FontAwesomeIcon icon={faHeartCircleBolt} /> : <FontAwesomeIcon icon={faHeart} />}
                 12 liked
             </div>
-            <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
+            
+            <div className="item" onClick={() => handleOpenCommentSection(postItem.id)}>
             <FontAwesomeIcon icon={faComment} />
                 12 comments
             </div>
@@ -49,8 +56,10 @@ function Post({ postItem, post }) {
                 share
             </div>
         </div>
-        { commentOpen && <Comments postId={postItem.id} />}
         
+        {openPostId === postItem.id && <Comments postId={postItem.id} />}
+        {console.log("postItem.id")}
+        {console.log(postItem.id)}
         </div>
         </div>
     )
