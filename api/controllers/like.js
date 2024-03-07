@@ -26,12 +26,8 @@ export const addLike = (req, res) => {
 
 export const deleteLike = (req, res) => {
     const q = "DELETE FROM social.likes WHERE userId = ? AND  postId =?";
-    const values = [
-        req.body.userId,
-        req.body.postId
-    ]
 
-    db.query(q, values,(err,data) =>{
+    db.query(q, [req.query.userId, req.query.postId],(err,data) =>{
         if (err) return res.status(500).json(err);
         return res.status(200).json("liked has been removed");
     })

@@ -6,8 +6,26 @@ import { faEnvelope } from '@fortawesome/free-regular-svg-icons'
 import { faLocationDot, faGlobe, faEllipsis } from '@fortawesome/free-solid-svg-icons'
 import "../profile/profile.scss"
 import Posts from '../../components/posts/Posts'
+import { useLocation } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import { makeRequest } from '../../axios'
 
 const Profile = () => {
+    const userId = useLocation().pathname.split("/")[2]
+
+    const { isLoading, error, data} = useQuery({
+        queryKey: ["user"],
+        queryFn: () => makeRequest.get("/users/find/3").then(response => {
+            return response.data
+        })
+
+        });
+
+        console.log("profile data")
+        console.log(data)
+
+
+
     return (
         <div className='profile'>
             <div className="images">
