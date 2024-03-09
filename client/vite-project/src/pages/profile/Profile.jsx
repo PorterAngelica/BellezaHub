@@ -11,11 +11,13 @@ import { useQuery } from '@tanstack/react-query'
 import { makeRequest } from '../../axios'
 
 const Profile = () => {
-    const userId = useLocation().pathname.split("/")[2]
+    const userId = useLocation().pathname.split("/")[3]
+    console.log("userId locationS")
+    console.log(userId)
 
     const { isLoading, error, data} = useQuery({
-        queryKey: ["user"],
-        queryFn: () => makeRequest.get("/users/find/3").then(response => {
+        queryKey: ["user", userId],
+        queryFn: () => makeRequest.get("/users/find/" + userId).then(response => {
             return response.data
         })
 
@@ -23,6 +25,14 @@ const Profile = () => {
 
         console.log("profile data")
         console.log(data)
+        
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    }
 
 
 
@@ -41,15 +51,15 @@ const Profile = () => {
                         <FontAwesomeIcon icon={faEllipsis} />
                     </div>
                     <div className="center">
-                        <span>Rosarito</span>
+                        <span>{data.name}  </span>
                         <div className="info">
                             <div className="item">
                                 <FontAwesomeIcon icon={faLocationDot} />
-                                <span>Mexico</span>
+                                <span> {data.city}  </span>
                             </div>
                             <div className="item">
                                 <FontAwesomeIcon icon={faGlobe} />
-                                <span>Spanish</span>
+                                <span>{data.nationality} </span>
                             </div>
                         </div>
                         <button>Follow</button>
@@ -59,7 +69,7 @@ const Profile = () => {
                         <FontAwesomeIcon icon={faEllipsis} />
                     </div>
                 </div>
-                <Posts />
+                <Posts userId={userId} />
             </div>
         </div>
     )
