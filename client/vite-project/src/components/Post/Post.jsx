@@ -53,8 +53,8 @@ function Post({ postItem }) {
             return response.data
         })
     })
-    console.log("likes data")
-    console.log(data)
+    // console.log("likes data")
+    // console.log(data)
 
     if (isLoading) {
         return <div> Loading ...</div>;
@@ -65,8 +65,8 @@ function Post({ postItem }) {
         return <div> Error; {error.message} </div>;
     }
 
-console.log("postItem")
-console.log(postItem)
+// console.log("postItem")
+// console.log(postItem)
     return (
         <div className='post'>
             <div className="container">
@@ -75,7 +75,7 @@ console.log(postItem)
                         <img src={postItem.users_profilePic} alt="" />
                         <div className="details">
                             <Link to={`/home/profile/${postItem.users_id}`} style={{ textDecoration: "none", color: "inherit" }}>
-                                <span className='name'>{postItem.users_name}</span>
+                                <span className='name'>{postItem.users_name}{ postItem.name}</span>
                             </Link>
                             <span className='date'> {moment(postItem.created_at).fromNow()} </span>
                         </div>
@@ -114,8 +114,8 @@ console.log(postItem)
                 </div>
 
                 {openPostId === postItem.id && <Comments postId={postItem.id} />}
-                {console.log("postItem.id")}
-                {console.log(postItem.id)}
+                {/* {console.log("postItem.id")}
+                {console.log(postItem.id)} */}
             </div>
         </div>
     )

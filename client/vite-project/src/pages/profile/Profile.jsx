@@ -1,30 +1,55 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import {  faInstagram } from '@fortawesome/free-regular-svg-icons'
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons'
-// import { faTwitter, faPinterest } from '@fortawesome/free-solid-svg-icons'
 import { faLocationDot, faGlobe, faEllipsis } from '@fortawesome/free-solid-svg-icons'
 import "../profile/profile.scss"
 import Posts from '../../components/posts/Posts'
 import { useLocation } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from '../../axios'
+import { AuthContext } from '../../context/AuthContext'
 
 const Profile = () => {
-    const userId = useLocation().pathname.split("/")[3]
-    console.log("userId locationS")
-    console.log(userId)
+    const { currentUser } = useContext(AuthContext)
+    const userId = parseInt(useLocation().pathname.split("/")[3]);
+
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: (following) => {
+            if(following){
+                return makeRequest.delete(`/relationships?userId=${userId}`);
+            }else{
+                return makeRequest.post("/relationships", {userId});
+            }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(["relationship"]);
+        },
+        onError: (error) => {
+            {error.message}
+            console.log(error.message)
+        }
+    })
+    
+    const {data: relationshipData} = useQuery({
+        queryKey: ["relationship"],
+        queryFn: () => makeRequest.get("/relationships?followedUserId=" + userId).then((response) => {
+            return response.data
+        })
+        });
+
+        const handleFollow = () => {
+            mutation.mutate(relationshipData.includes(currentUser.id));
+    };
+
 
     const { isLoading, error, data} = useQuery({
         queryKey: ["user", userId],
         queryFn: () => makeRequest.get("/users/find/" + userId).then(response => {
             return response.data
         })
-
         });
-
-        console.log("profile data")
-        console.log(data)
         
     if (isLoading) {
         return <div>Loading...</div>;
@@ -34,13 +59,11 @@ const Profile = () => {
         return <div>Error: {error.message}</div>;
     }
 
-
-
     return (
         <div className='profile'>
             <div className="images">
-                <img src="https://images.pexels.com/photos/19380634/pexels-photo-19380634/free-photo-of-tabby-cat-yawning.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" className="cover" />
-                <img src="https://images.pexels.com/photos/18866331/pexels-photo-18866331/free-photo-of-model-in-black-top-and-jacket.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" className="profilePic" />
+                <img src={data.coverPic} className="cover"/>
+                <img src={data.ProfilePic} className="profilePic" />
             </div>
             <div className="profileContainer">
                 <div className="uInfo">
@@ -62,7 +85,13 @@ const Profile = () => {
                                 <span>{data.nationality} </span>
                             </div>
                         </div>
-                        <button>Follow</button>
+                        {userId === currentUser.id ? (
+                            <button>update</button>
+                        ) : (
+                        <button onClick={handleFollow}> 
+                        {relationshipData.includes(currentUser.id) ? "Following" : "Follow"}
+                        </button>
+                        )}
                     </div>
                     <div className="right">
                         <FontAwesomeIcon icon={faEnvelope} />
