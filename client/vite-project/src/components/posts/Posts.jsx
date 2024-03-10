@@ -21,8 +21,8 @@ const Posts = ({userId}) => {
             })
         } 
     })
-    console.log("userId + posts")
-    console.log(userId)
+    // console.log("userId + posts")
+    // console.log(userId)
 
     if (isLoading) {
         return <div>Loading...</div>;
