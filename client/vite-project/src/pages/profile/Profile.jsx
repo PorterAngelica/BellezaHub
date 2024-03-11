@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, {useContext, useState} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons'
 import { faLocationDot, faGlobe, faEllipsis } from '@fortawesome/free-solid-svg-icons'
@@ -8,9 +8,11 @@ import { useLocation } from 'react-router-dom'
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from '../../axios'
 import { AuthContext } from '../../context/AuthContext'
+import Update from '../../components/update/Update'
 
 const Profile = () => {
     const { currentUser } = useContext(AuthContext)
+    const [openUpdate, setOpenUpdate] = useState(false)
     const userId = parseInt(useLocation().pathname.split("/")[3]);
 
     const queryClient = useQueryClient();
@@ -32,7 +34,7 @@ const Profile = () => {
         }
     })
     
-    const {data: relationshipData} = useQuery({
+    const {isLoading: rIsLoading , data: relationshipData} = useQuery({
         queryKey: ["relationship"],
         queryFn: () => makeRequest.get("/relationships?followedUserId=" + userId).then((response) => {
             return response.data
@@ -50,6 +52,9 @@ const Profile = () => {
             return response.data
         })
         });
+
+        console.log("data")
+        console.log(data)
         
     if (isLoading) {
         return <div>Loading...</div>;
@@ -62,8 +67,8 @@ const Profile = () => {
     return (
         <div className='profile'>
             <div className="images">
-                <img src={data.coverPic} className="cover"/>
-                <img src={data.ProfilePic} className="profilePic" />
+                <img src={"/uploads/" + data.coverPic} className="cover" />
+                <img src={"/uploads/" + data.profilePic} className="profilePic" />
             </div>
             <div className="profileContainer">
                 <div className="uInfo">
@@ -85,8 +90,11 @@ const Profile = () => {
                                 <span>{data.nationality} </span>
                             </div>
                         </div>
-                        {userId === currentUser.id ? (
-                            <button>update</button>
+                        {rIsLoading ? ( 
+                            "loading" 
+                        ) : 
+                        userId === currentUser.id ? (
+                            <button onClick={() => setOpenUpdate(true)} >update</button>
                         ) : (
                         <button onClick={handleFollow}> 
                         {relationshipData.includes(currentUser.id) ? "Following" : "Follow"}
@@ -100,6 +108,7 @@ const Profile = () => {
                 </div>
                 <Posts userId={userId} />
             </div>
+                {openUpdate && <Update setOpenUpdate={setOpenUpdate} user={data.user} />}
         </div>
     )
 }
