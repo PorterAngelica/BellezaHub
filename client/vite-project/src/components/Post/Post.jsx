@@ -9,9 +9,13 @@ import moment from "moment/moment.js";
 import { makeRequest } from '../../axios'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { AuthContext } from '../../context/AuthContext'
+import { useLocation } from 'react-router-dom'
 
 
 function Post({ postItem }) {
+    const location = useLocation();
+    const isProfilePage = location.pathname.startsWith('/home/profile/'); // Check if the pathname starts with "/home/profile/"
+
 
     const [openPostId, setOpenPostId] = useState(null)
     const { currentUser } = useContext(AuthContext)
@@ -29,9 +33,9 @@ function Post({ postItem }) {
                 userId: currentUser.id,
                 postId: postItem.id
             };
-            if(liked){
+            if (liked) {
                 return makeRequest.delete("/likes", { data: requestData })
-            }else{
+            } else {
                 return makeRequest.post("/likes", (requestData));
             }
         },
@@ -39,7 +43,7 @@ function Post({ postItem }) {
             queryClient.invalidateQueries(["likes"]);
         },
         onError: (error) => {
-            {error.message}
+            { error.message }
             console.log(error.message)
         }
     })
@@ -49,22 +53,23 @@ function Post({ postItem }) {
             const requestData = {
                 postId: postItem.id
             };
-                return makeRequest.delete("/posts/" + postId)
+            return makeRequest.delete("/posts/" + postId)
         },
         onSuccess: () => {
             queryClient.invalidateQueries(["posts"]);
         },
         onError: (error) => {
-            {error.message}
+            { error.message }
             console.log(error.message)
         }
     })
-    
+
     const handleLike = (liked) => {
         mutation.mutate(liked);
+        // data.includes(currentUser.id)
     };
 
-    const handleDelete = () =>{
+    const handleDelete = () => {
         deleteMutation.mutate(postItem.id)
     }
 
@@ -86,23 +91,29 @@ function Post({ postItem }) {
         return <div> Error; {error.message} </div>;
     }
 
-// console.log("postItem")
-// console.log(postItem)
+    console.log("postItempost")
+    console.log(postItem)
     return (
         <div className='post'>
             <div className="container">
                 <div className="user">
                     <div className="userInfo">
-                        <img src={postItem.users_profilePic} alt="" />
+                        <img
+                            src={isProfilePage ? "/uploads/" + postItem.profilePic : "/uploads/" + postItem.users_profilePic}
+                            alt="Post Image"
+                        />
+
                         <div className="details">
                             <Link to={`/home/profile/${postItem.users_id}`} style={{ textDecoration: "none", color: "inherit" }}>
-                                <span className='name'>{postItem.users_name}{ postItem.name}</span>
+                                <span className='name'>{postItem.users_name}{postItem.name}</span>
                             </Link>
                             <span className='date'> {moment(postItem.created_at).fromNow()} </span>
                         </div>
                     </div>
                     <FontAwesomeIcon icon={faEllipsis} onClick={() => setMenuOpen(!menuOpen)} />
-                    {menuOpen && <button onClick={handleDelete}> Delete </button>}
+                    {menuOpen && postItem.users_id === currentUser.id && (
+                        <button onClick={handleDelete}> Delete </button>)}
+
                 </div>
                 <div className="content">
                     <p value={null}>{postItem.description}</p>
@@ -113,8 +124,8 @@ function Post({ postItem }) {
                     <div className="item">
 
                         {data && data.includes(currentUser.id) ? (
-                            <FontAwesomeIcon 
-                            icon={faHeartCircleBolt} style={{ color: "red" }}
+                            <FontAwesomeIcon
+                                icon={faHeartCircleBolt} style={{ color: "red" }}
                                 onClick={() => handleLike(true)}
                             />
                         ) : (

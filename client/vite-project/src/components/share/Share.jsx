@@ -62,7 +62,7 @@ const Share = () => {
                 <div className="top">
                     <div className="left">
                     <img
-                        src={currentUser.profilePic}
+                        src={"/uploads/" + currentUser.profilePic}
                         alt=""
                     />
 
