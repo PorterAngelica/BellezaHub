@@ -1,1 +1,2 @@
-#Social media is a full stack application inspired on the Facebook app. It was built using React, Express.js, Node.js, Scss, MySQL and multer. There are a lot of functionalities to implement but even thought this is a full CRUD its main focus was the UI design.
+
+#Social media is a comprehensive application, drawing inspiration from the features of the Facebook app. Developed using a tech stack comprising React, Express.js, Node.js, Scss, MySQL, and multer, it encompasses a wide array of functionalities. While it is a full CRUD application, its primary emphasis lies in its meticulously crafted UI design.
