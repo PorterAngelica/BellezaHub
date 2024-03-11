@@ -1,1 +1,1 @@
-#Social media - clone - inspired on the messaging platforms
+#Social media is a full stack application inspired on the Facebook app. It was built using React, Express.js, Node.js, Scss, MySQL and multer. There are a lot of functionalities to implement but even thought this is a full CRUD its main focus was the UI design.
