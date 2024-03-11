@@ -128,9 +128,8 @@ function App() {
     <Routes>
       <Route path='/register'  element={<Register/>}/>
       <Route path='/login'  element={<Login />}/>
-      {/* <Route  element={ <ProtectedRoute />}> */}
+
       <Route path="/home" element={ <Layout />}>
-      {/* </Route> */}
               <Route path="/home" element={<Home />} />
               <Route path="/home/profile/:id" element={<Profile />} />
           </Route>

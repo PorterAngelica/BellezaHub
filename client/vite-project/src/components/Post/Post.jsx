@@ -15,6 +15,7 @@ function Post({ postItem }) {
 
     const [openPostId, setOpenPostId] = useState(null)
     const { currentUser } = useContext(AuthContext)
+    const [menuOpen, setMenuOpen] = useState(false)
 
     const handleOpenCommentSection = (postId) => {
         setOpenPostId((prevPostId) => (postId === prevPostId ? null : postId));
@@ -42,10 +43,30 @@ function Post({ postItem }) {
             console.log(error.message)
         }
     })
+
+    const deleteMutation = useMutation({
+        mutationFn: (postId) => {
+            const requestData = {
+                postId: postItem.id
+            };
+                return makeRequest.delete("/posts/" + postId)
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(["posts"]);
+        },
+        onError: (error) => {
+            {error.message}
+            console.log(error.message)
+        }
+    })
     
     const handleLike = (liked) => {
         mutation.mutate(liked);
     };
+
+    const handleDelete = () =>{
+        deleteMutation.mutate(postItem.id)
+    }
 
     const { isLoading, error, data } = useQuery({
         queryKey: ["likes", postItem.id],
@@ -80,7 +101,8 @@ function Post({ postItem }) {
                             <span className='date'> {moment(postItem.created_at).fromNow()} </span>
                         </div>
                     </div>
-                    <FontAwesomeIcon icon={faEllipsis} />
+                    <FontAwesomeIcon icon={faEllipsis} onClick={() => setMenuOpen(!menuOpen)} />
+                    {menuOpen && <button onClick={handleDelete}> Delete </button>}
                 </div>
                 <div className="content">
                     <p value={null}>{postItem.description}</p>
