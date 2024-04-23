@@ -1,6 +1,3 @@
-
-Sure, here's a suggestion for your README:
-
 Social Media Clone
 This project is a full-stack social media clone built using React, Express.js, Node.js, SCSS, MySQL, and Multer. It replicates the core functionalities of popular social media platforms, allowing users to interact with posts, follow other users, update their profiles, and share content seamlessly.
 
